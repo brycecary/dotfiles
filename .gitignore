@@ -17,3 +17,6 @@
 
 ## synth-shell
 !.config/synth-shell
+
+## Fonts
+!.local/share/fonts
