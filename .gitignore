@@ -1,0 +1,19 @@
+# Ignore all files in homedir
+*
+
+# Allow the following configs
+
+## Don't ignore yourself haha
+!.gitignore
+
+## awesomewm config
+!.config/awesome
+
+## bashrc config
+!.bashrc
+
+## README
+!README.md
+
+## synth-shell
+!.config/synth-shell

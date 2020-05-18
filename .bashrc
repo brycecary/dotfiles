@@ -1,5 +1,38 @@
 #!/bin/sh
 
+# synth-shell imports
+
+##-----------------------------------------------------
+## status
+## Added by synth-shell
+## https://github.com/andresgongora/synth-shell/
+if [ -f /home/bryce/.config/synth-shell/status.sh ]; then
+	source /home/bryce/.config/synth-shell/status.sh
+fi
+
+##-----------------------------------------------------
+## fancy-bash-prompt
+## Added by synth-shell
+## https://github.com/andresgongora/synth-shell/
+if [ -f /home/bryce/.config/synth-shell/fancy-bash-prompt.sh ]; then
+	source /home/bryce/.config/synth-shell/fancy-bash-prompt.sh
+fi
+
+##-----------------------------------------------------
+## better-ls
+## Added by synth-shell
+## https://github.com/andresgongora/synth-shell/
+if [ -f /home/bryce/.config/synth-shell/better-ls.sh ]; then
+	source /home/bryce/.config/synth-shell/better-ls.sh
+fi
+
+##-----------------------------------------------------
+## alias
+## Added by synth-shell
+## https://github.com/andresgongora/synth-shell/
+if [ -f /home/bryce/.config/synth-shell/alias.sh ]; then
+	source /home/bryce/.config/synth-shell/alias.sh
+fi
 
 # File extractor
 ex ()
@@ -49,35 +82,3 @@ alias ~='cd ~ && clear' # Add a wipe
 alias ls='ls --color=auto'
 
 # EOF #
-
-##-----------------------------------------------------
-## status
-## Added by synth-shell
-## https://github.com/andresgongora/synth-shell/
-if [ -f /home/bryce/.config/synth-shell/status.sh ]; then
-	source /home/bryce/.config/synth-shell/status.sh
-fi
-
-##-----------------------------------------------------
-## fancy-bash-prompt
-## Added by synth-shell
-## https://github.com/andresgongora/synth-shell/
-if [ -f /home/bryce/.config/synth-shell/fancy-bash-prompt.sh ]; then
-	source /home/bryce/.config/synth-shell/fancy-bash-prompt.sh
-fi
-
-##-----------------------------------------------------
-## better-ls
-## Added by synth-shell
-## https://github.com/andresgongora/synth-shell/
-if [ -f /home/bryce/.config/synth-shell/better-ls.sh ]; then
-	source /home/bryce/.config/synth-shell/better-ls.sh
-fi
-
-##-----------------------------------------------------
-## alias
-## Added by synth-shell
-## https://github.com/andresgongora/synth-shell/
-if [ -f /home/bryce/.config/synth-shell/alias.sh ]; then
-	source /home/bryce/.config/synth-shell/alias.sh
-fi
