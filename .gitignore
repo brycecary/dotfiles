@@ -20,3 +20,6 @@
 
 ## Fonts
 !.local/share/fonts
+
+## Terminator
+!.config/terminator
