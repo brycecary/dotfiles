@@ -536,8 +536,8 @@ prompt_command_hook()
 	fi
 	local user=$USER
 	local host=$HOSTNAME
-	local path="$(shortenPath "$PWD" 20)"
-	local git_branch="$(shortenPath "$(getGitBranch)" 10)"
+	local path="$(shortenPath "$PWD" 50)"
+	local git_branch="$(shortenPath "$(getGitBranch)" 20)"
 	FBP_USER="$user"
 	FBP_HOST="$host"
 	FBP_PWD="$path"
