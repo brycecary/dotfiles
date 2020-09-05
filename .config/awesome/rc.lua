@@ -58,6 +58,15 @@ _G.client.connect_signal(
   end
 )
 
+-- Fix apps that don't start with a defined class (stupid spotify)
+client.connect_signal("property::class", function(c)
+  if c.class == "Spotify" then
+    -- Move the Spotify instance to "music" tag on this screen
+    -- local t = awful.tag.find_by_name(awful.screen.focused(), "music")
+    c:move_to_tag("6")
+  end
+end)
+
 -- Enable sloppy focus, so that focus follows mouse.
 --[[
 _G.client.connect_signal(

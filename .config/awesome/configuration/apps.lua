@@ -13,15 +13,12 @@ return {
     lock = 'i3lock-fancy',
     quake = 'terminator',
     screenshot = 'flameshot gui',
-    
-    -- Editing these also edits the default program
-    -- associated with each tag/workspace
-    browser = 'vivaldi-stable',
-    editor = 'code-insiders', -- gui text editor
-    social = 'discord',
-    game = rofi_command,
+    browser = 'chromium --force-dark-mode',
+    editor = 'code-insiders', 
+    social = 'discord-canary',
+    game = "steam",
     files = 'nautilus -w',
-    music = rofi_command
+    music = "spotify"
   },
   -- List of apps to start once on start-up
   run_on_start_up = {
@@ -31,13 +28,12 @@ return {
     'ibus-daemon --xim',
     'scream -u -p 4011 -i virbr1',
     'numlockx on',
-    '/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)', -- credential manager
+    '/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)',
     'flameshot',
     'synology-drive -minimized',
     'discord-canary',
-    'steam',
-    'chromium --force-dark-mode',
     'spotify',
+    'chromium --force-dark-mode',
     '~/.config/awesome/configuration/awspawn'
   }
 }

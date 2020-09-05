@@ -14,8 +14,8 @@ local globalKeys =
   -- Tag browsing
   awful.key({modkey}, 'w', awful.tag.viewprev, {description = 'view previous', group = 'tag'}),
   awful.key({modkey}, 's', awful.tag.viewnext, {description = 'view next', group = 'tag'}),
-  awful.key({altkey, 'Control'}, 'Up', awful.tag.viewprev, {description = 'view previous', group = 'tag'}),
-  awful.key({altkey, 'Control'}, 'Down', awful.tag.viewnext, {description = 'view next', group = 'tag'}),
+  -- awful.key({altkey, 'Control'}, 'Up', awful.tag.viewprev, {description = 'view previous', group = 'tag'}),
+  -- awful.key({altkey, 'Control'}, 'Down', awful.tag.viewnext, {description = 'view next', group = 'tag'}),
   awful.key({modkey}, 'Escape', awful.tag.history.restore, {description = 'go back', group = 'tag'}),
   -- Default client focus
   awful.key(
@@ -114,7 +114,7 @@ local globalKeys =
     function()
       awful.util.spawn(apps.default.browser)
     end,
-    {description = 'open a browser', group = 'launcher'}
+    {description = 'open chromium', group = 'launcher'}
   ),
   -- Standard program
   awful.key(
@@ -219,15 +219,6 @@ local globalKeys =
       end
     end,
     {description = 'restore minimized', group = 'client'}
-  ),
-  -- Dropdown application
-  awful.key(
-    {modkey},
-    'z',
-    function()
-      _G.toggle_quake()
-    end,
-    {description = 'dropdown application', group = 'launcher'}
   ),
   -- Widgets popups
   --[[awful.key(

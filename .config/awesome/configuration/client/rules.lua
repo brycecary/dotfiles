@@ -72,7 +72,35 @@ awful.rules.rules = {
     }
   },
   {
+    rule = {instance = "minecraft-launcher"},
+    properties = {
+      screen = 1,
+      tag = "7"
+    }
+  },
+  {
+    rule = {instance = "Minecraft Launcher"},
+    properties = {
+      screen = 1,
+      tag = "7"
+    }
+  },
+  {
     rule = { instance = "nautilus" },
+    properties = {
+      screen = 1,
+      tag = "4",
+    }
+  },
+  {
+    rule = { instance = "org.gnome.Nautilus" },
+    properties = {
+      screen = 1,
+      tag = "4",
+    }
+  },
+  {
+    rule = { instance = "filezilla" },
     properties = {
       screen = 1,
       tag = "4",
@@ -107,7 +135,7 @@ awful.rules.rules = {
     }
   },
   {
-    rule = { instance = "spotify" },
+    rule = { instance = "Spotify", instance = "spotify", instance = "Spotify Premium" },
     properties = {
       screen = 1,
       tag = "6",
@@ -118,6 +146,27 @@ awful.rules.rules = {
     properties = {
       screen = 1,
       tag = "3",
+    }
+  },
+  {
+    rule = { instance = "GitAhead" },
+    properties = {
+      screen = 1,
+      tag = "4"
+    }
+  },
+  {
+    rule = { instance = "obs" },
+    properties = {
+      screen = 1,
+      tag = "8",
+      opacity = 1,
+    }
+  },
+  {
+    rule = {tag = "8"},
+    properties = {
+      floating = true
     }
   },
   {

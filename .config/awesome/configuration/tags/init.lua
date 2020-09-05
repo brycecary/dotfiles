@@ -31,7 +31,7 @@ local tags = {
   {
     icon = icons.terminal,
     type = 'terminal',
-    defaultApp = apps.default.files,
+    defaultApp = apps.default.terminal,
     screen = 1
   },
   {

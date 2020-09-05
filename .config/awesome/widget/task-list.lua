@@ -179,7 +179,8 @@ local tasklist_buttons =
     {},
     2,
     function(c)
-      c.kill(c)
+      -- Removed kill on middle click (6.3.2020)
+      -- c.kill(c)
     end
   ),
   awful.button(

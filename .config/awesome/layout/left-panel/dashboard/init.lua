@@ -43,7 +43,7 @@ return function(_, panel)
       widget = mat_icon
     },
     wibox.widget {
-      text = 'End work session',
+      text = 'Shutdown and Logout options',
       font = 'Roboto medium 13',
       widget = wibox.widget.textbox
     },
