@@ -58,6 +58,14 @@ awful.rules.rules = {
     }
   },
   {
+    rule = { instance = "google-chrome" },
+    properties = {
+      screen = 1,
+      tag = "1",
+      opacity = 1
+    }
+  },
+  {
     rule = { instance = "discord" },
     properties = {
       screen = 1,
@@ -132,6 +140,7 @@ awful.rules.rules = {
     properties = {
       screen = 1,
       tag = "6",
+      opacity = 1
     }
   },
   {

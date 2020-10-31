@@ -13,7 +13,7 @@ return {
     lock = 'i3lock-fancy',
     quake = 'terminator',
     screenshot = 'flameshot gui',
-    browser = 'chromium --force-dark-mode',
+    browser = 'google-chrome --force-dark-mode',
     editor = 'code-insiders', 
     social = 'discord-canary',
     game = "steam",
@@ -33,7 +33,7 @@ return {
     'synology-drive -minimized',
     'discord-canary',
     'spotify',
-    'chromium --force-dark-mode',
+    'google-chrome --force-dark-mode',
     '~/.config/awesome/configuration/awspawn'
   }
 }

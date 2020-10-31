@@ -114,7 +114,7 @@ local globalKeys =
     function()
       awful.util.spawn(apps.default.browser)
     end,
-    {description = 'open chromium', group = 'launcher'}
+    {description = 'open Chrome', group = 'launcher'}
   ),
   -- Standard program
   awful.key(
