@@ -3,37 +3,30 @@ local filesystem = require('gears.filesystem')
 -- Thanks to jo148 on github for making rofi dpi aware!
 local with_dpi = require('beautiful').xresources.apply_dpi
 local get_dpi = require('beautiful').xresources.get_dpi
-local rofi_command = 'env /usr/bin/rofi -dpi ' .. get_dpi() .. ' -width ' .. with_dpi(400) .. ' -show drun -theme ' .. filesystem.get_configuration_dir() .. '/configuration/rofi.rasi -run-command "/bin/bash -c -i \'shopt -s expand_aliases; {cmd}\'"'
+local rofi_command = 'env /usr/bin/rofi -dpi ' .. get_dpi() .. ' -width ' .. with_dpi(400) .. ' -show drun -theme ' ..
+                         filesystem.get_configuration_dir() ..
+                         '/configuration/rofi.rasi -run-command "/bin/bash -c -i \'shopt -s expand_aliases; {cmd}\'"'
 
 return {
-  -- List of apps to start by default on some actions
-  default = {
-    terminal = 'terminator',
-    rofi = rofi_command,
-    lock = 'i3lock-fancy',
-    quake = 'terminator',
-    screenshot = 'flameshot gui',
-    browser = 'google-chrome --force-dark-mode',
-    editor = 'code-insiders', 
-    social = 'discord-canary',
-    game = "steam",
-    files = 'nautilus -w',
-    music = "spotify"
-  },
-  -- List of apps to start once on start-up
-  run_on_start_up = {
-    'compton --config ' .. filesystem.get_configuration_dir() .. '/configuration/compton.conf',
-    'nm-applet --indicator',
-    'pa-applet',
-    'ibus-daemon --xim',
-    'scream -u -p 4011 -i virbr1',
-    'numlockx on',
-    '/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)',
-    'flameshot',
-    'synology-drive -minimized',
-    'discord-canary',
-    'spotify',
-    'google-chrome --force-dark-mode',
-    '~/.config/awesome/configuration/awspawn'
-  }
+    -- List of apps to start by default on some actions
+    default = {
+        terminal = 'terminator',
+        rofi = rofi_command,
+        lock = 'i3lock-fancy',
+        quake = 'terminator',
+        screenshot = 'flameshot gui',
+        browser = 'google-chrome --force-dark-mode',
+        editor = 'code-insiders',
+        social = 'discord-canary',
+        game = "steam",
+        files = 'nautilus -w',
+        music = "spotify"
+    },
+    -- List of apps to start once on start-up
+    run_on_start_up = {'compton --config ' .. filesystem.get_configuration_dir() .. '/configuration/compton.conf',
+                       'nm-applet --indicator', 'pa-applet', 'ibus-daemon --xim', 'scream -u -p 4011 -i virbr1',
+                       'numlockx on',
+                       '/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)',
+                       'flameshot', 'synology-drive -minimized', 'discord-canary', 'spotify',
+                       'google-chrome --force-dark-mode', '~/.config/awesome/configuration/awspawn'}
 }

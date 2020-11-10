@@ -19,9 +19,9 @@ theme.accent = mat_colors.orange
 theme.background = mat_colors.grey
 
 local awesome_overrides = function(theme)
-  --
+    --
 end
 return {
-  theme = theme,
-  awesome_overrides = awesome_overrides
+    theme = theme,
+    awesome_overrides = awesome_overrides
 }

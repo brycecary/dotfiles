@@ -5,7 +5,6 @@
 -- @copyright 2008 Julien Danjou
 -- @module awful.layout
 ---------------------------------------------------------------------------
-
 -- Grab environment we need
 local pairs = pairs
 

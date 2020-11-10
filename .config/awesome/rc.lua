@@ -14,7 +14,7 @@ require('module.notifications')
 require('module.auto-start')
 require('module.decorate-client')
 -- Backdrop causes bugs on some gtk3 applications
---require('module.backdrop')
+-- require('module.backdrop')
 require('module.exit-screen')
 require('module.quake-terminal')
 
@@ -24,8 +24,7 @@ require('configuration.tags')
 _G.root.keys(require('configuration.keys.global'))
 
 -- Create a wibox for each screen and add it
-awful.screen.connect_for_each_screen(
-  function(s)
+awful.screen.connect_for_each_screen(function(s)
     -- If wallpaper is a function, call it with the screen
     if beautiful.wallpaper then
         if type(beautiful.wallpaper) == "string" then
@@ -38,33 +37,29 @@ awful.screen.connect_for_each_screen(
             beautiful.wallpaper(s)
         end
     end
-  end
-)
+end)
 
 -- Signal function to execute when a new client appears.
-_G.client.connect_signal(
-  'manage',
-  function(c)
+_G.client.connect_signal('manage', function(c)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
     if not _G.awesome.startup then
-      awful.client.setslave(c)
+        awful.client.setslave(c)
     end
 
     if _G.awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
-      -- Prevent clients from being unreachable after screen count changes.
-      awful.placement.no_offscreen(c)
+        -- Prevent clients from being unreachable after screen count changes.
+        awful.placement.no_offscreen(c)
     end
-  end
-)
+end)
 
 -- Fix apps that don't start with a defined class (stupid spotify)
 client.connect_signal("property::class", function(c)
-  if c.class == "Spotify" then
-    -- Move the Spotify instance to "music" tag on this screen
-    -- local t = awful.tag.find_by_name(awful.screen.focused(), "music")
-    c:move_to_tag("6")
-  end
+    if c.class == "Spotify" then
+        -- Move the Spotify instance to "music" tag on this screen
+        -- local t = awful.tag.find_by_name(awful.screen.focused(), "music")
+        c:move_to_tag("6")
+    end
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -78,15 +73,9 @@ _G.client.connect_signal(
 --]]
 
 -- Make the focused window have a glowing border
-_G.client.connect_signal(
-  'focus',
-  function(c)
+_G.client.connect_signal('focus', function(c)
     c.border_color = beautiful.border_focus
-  end
-)
-_G.client.connect_signal(
-  'unfocus',
-  function(c)
+end)
+_G.client.connect_signal('unfocus', function(c)
     c.border_color = beautiful.border_normal
-  end
-)
+end)
