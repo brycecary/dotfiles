@@ -1,0 +1,3 @@
+# Ignore all font files
+# Force add zip files to git that need to be unpacked during install
+**/.fonts/*
