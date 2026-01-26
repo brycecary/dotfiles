@@ -1,0 +1,40 @@
+#!/bin/bash
+
+DOTFILE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Ensure packages are installed
+apt_packages=(cmake make stow unzip)
+yay_packages=()
+
+if command -v yay &> /dev/null; then
+  yay -S "${yay_packages[@]}"
+elif command -v apt &> /dev/null; then
+  sudo apt update
+  sudo apt install -y "${apt_packages[@]}"
+else
+  echo "No supported package manager found"
+  exit 1
+fi
+
+# Build latest neovim
+cd ..
+if [ ! -d ./neovim ]; then
+  # Clone neovim if needed
+  git clone https://github.com/neovim/neovim.git
+fi
+cd neovim
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
+cd $DOTFILE_DIR
+
+# Install JB Mono font
+mkdir -p $HOME/.fonts
+cd $HOME/.fonts
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+unzip -o JetBrainsMono.zip
+fc-cache -f -v
+cd $DOTFILE_DIR
+
+# Unload neovim configuration
+stow -t $HOME neovim
+

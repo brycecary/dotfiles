@@ -7,13 +7,11 @@ The previous version can still be found on the
 
 ## Install
 
-I use GNU Stow for linking my dotfiles and make for handling other actions
-(like installing fonts).
-
-## Neovim
-
-Install:
+Dotfiles are being turned into a single bash install. Just run the below
+executable to begin the install. It will attempt to auto-select what's
+needed.
 
 ```bash
-make neovim # stow and install fonts
+./setup
 ```
+
