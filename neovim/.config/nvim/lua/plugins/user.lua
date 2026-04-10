@@ -1,73 +1,116 @@
--- You can also add or configure plugins by creating files in this `plugins/` folder
--- Here are some examples:
-
 ---@type LazySpec
 return {
 
-  -- == Examples of Adding Plugins ==
-
-  "andweeb/presence.nvim",
+  -- Theme: One Dark Pro Darker (matches VS Code "One Dark Pro Darker")
   {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function() require("lsp_signature").setup() end,
+    "olimorris/onedarkpro.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      colors = {
+        onedark = {
+          bg = "#23272e",
+          cursorline = "#2c313a",
+          selection = "#383e49",
+          float_bg = "#1e2227",
+        },
+      },
+      options = {
+        transparency = false,
+        cursorline = true,
+      },
+    },
   },
 
-  -- == Examples of Overriding Plugins ==
+  -- JSON/YAML schema support
+  { "b0o/schemastore.nvim", lazy = true },
 
-  -- customize alpha options
+  -- Surround text objects (cs, ds, ys)
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  -- Better UI for messages, cmdline, and popupmenu
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    opts = {
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
+      routes = {
+        { filter = { find = "vim.lsp.with%(%) is deprecated" }, opts = { skip = true } },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        lsp_doc_border = true,
+      },
+    },
+  },
+
+  -- Project-wide search and replace
+  {
+    "nvim-pack/nvim-spectre",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = "Spectre",
+    opts = {},
+  },
+
+  -- Dashboard
   {
     "goolord/alpha-nvim",
     opts = function(_, opts)
-      -- customize the dashboard header
       opts.section.header.val = { "" }
       return opts
     end,
   },
 
-  -- You can disable default plugins as follows:
+  -- Escape key mappings
   { "max397574/better-escape.nvim", enabled = true },
 
-  -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
+  -- Snippet engine
   {
     "L3MON4D3/LuaSnip",
     config = function(plugin, opts)
-      require "astronvim.plugins.configs.luasnip"(plugin, opts) -- include the default astronvim config that calls the setup call
-      -- add more custom luasnip configuration such as filetype extend or custom snippets
+      require "astronvim.plugins.configs.luasnip"(plugin, opts)
       local luasnip = require "luasnip"
       luasnip.filetype_extend("javascript", { "javascriptreact" })
     end,
   },
 
+  -- Auto-pairing brackets
   {
     "windwp/nvim-autopairs",
     config = function(plugin, opts)
-      require "astronvim.plugins.configs.nvim-autopairs"(plugin, opts) -- include the default astronvim config that calls the setup call
-      -- add more custom autopairs configuration such as custom rules
+      require "astronvim.plugins.configs.nvim-autopairs"(plugin, opts)
       local npairs = require "nvim-autopairs"
       local Rule = require "nvim-autopairs.rule"
       local cond = require "nvim-autopairs.conds"
       npairs.add_rules(
         {
           Rule("$", "$", { "tex", "latex" })
-            -- don't add a pair if the next character is %
             :with_pair(cond.not_after_regex "%%")
-            -- don't add a pair if  the previous character is xxx
-            :with_pair(
-              cond.not_before_regex("xxx", 3)
-            )
-            -- don't move right when repeat character
+            :with_pair(cond.not_before_regex("xxx", 3))
             :with_move(cond.none())
-            -- don't delete if the next character is xx
             :with_del(cond.not_after_regex "xx")
-            -- disable adding a newline when you press <cr>
             :with_cr(cond.none()),
         },
-        -- disable for .vim files, but it work for another filetypes
         Rule("a", "a", "-vim")
       )
     end,
   },
+
+  -- File explorer
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = function(_, opts)

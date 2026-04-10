@@ -15,5 +15,15 @@ if not pcall(require, "lazy") then
   vim.cmd.quit()
 end
 
+-- Suppress vim.lsp.with() deprecation from AstroNvim core
+local _original_deprecate = vim.deprecate
+vim.deprecate = function(name, ...)
+  if name == "vim.lsp.with()" or name == "client.supports_method" then return end
+  return _original_deprecate(name, ...)
+end
+
 require "lazy_setup"
+
+-- Restore original deprecate after plugins load
+vim.deprecate = _original_deprecate
 require "polish"

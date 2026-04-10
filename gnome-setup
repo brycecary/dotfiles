@@ -1,0 +1,300 @@
+#!/usr/bin/env bash
+# =============================================================================
+# GNOME Setup
+# Arch Linux / GNOME Shell 50+
+#
+# Log out and back in after running to apply all changes.
+# =============================================================================
+
+# =============================================================================
+# USER CONFIG
+# =============================================================================
+
+# Workspace names (empty string = unnamed). Must match number of workspaces.
+WORKSPACE_NAMES="['🌐 Browse', '💻 Dev', '🖥 Term', '', '💬 Comms']"
+NUM_WORKSPACES=5
+
+# App → workspace assignments.
+# Find app IDs: ls /usr/share/applications/ ~/.local/share/applications/
+
+# --- Workspace 1: Browsers & Media ---
+ws1=(
+  firefox.desktop
+  com.google.Chrome.desktop
+  spotify.desktop
+)
+
+# --- Workspace 2: Dev ---
+ws2=(
+  code-insiders.desktop
+)
+
+# --- Workspace 3: Terminal ---
+ws3=(
+  Alacritty.desktop
+)
+
+# --- Workspace 4 ---
+ws4=()
+
+# --- Workspace 5: Communication ---
+ws5=(
+  slack.desktop
+  Zoom.desktop
+  __MESSAGES__ # Google messages
+)
+
+# Dock favorites
+DOCK_FAVORITES=(
+  google-chrome.desktop
+  kitty.desktop
+  Alacritty.desktop
+  org.gnome.Nautilus.desktop
+  __MESSAGES__        # google messages
+  spotify.desktop
+  code-insiders.desktop
+)
+
+# Wallpaper (skip if file doesn't exist)
+WALLPAPER="$HOME/.local/share/backgrounds/2026-04-01-00-22-11-nasa-2026-science-calendar-march.webp"
+
+# =============================================================================
+# CHROME APPS
+# Chrome web app IDs are tied to the browser profile and differ per machine.
+# =============================================================================
+
+find_chrome_app() {
+  # Usage: find_chrome_app "App Name"
+  grep -rl "^Name=${1}$" ~/.local/share/applications/chrome-*.desktop 2>/dev/null \
+    | head -1 | xargs basename 2>/dev/null
+}
+
+MESSAGES_APP=$(find_chrome_app "Messages")
+if [[ -z "$MESSAGES_APP" ]]; then
+  echo "  ! Google Messages web app not found - skipping from ws5 and dock"
+fi
+
+# Substitute __MESSAGES__ placeholder in ws5 and dock
+for i in "${!ws5[@]}";           do [[ "${ws5[$i]}"            == "__MESSAGES__" ]] && { [[ -n "$MESSAGES_APP" ]] && ws5[$i]="$MESSAGES_APP" || unset 'ws5[$i]'; }; done
+for i in "${!DOCK_FAVORITES[@]}"; do [[ "${DOCK_FAVORITES[$i]}" == "__MESSAGES__" ]] && { [[ -n "$MESSAGES_APP" ]] && DOCK_FAVORITES[$i]="$MESSAGES_APP" || unset 'DOCK_FAVORITES[$i]'; }; done
+
+# =============================================================================
+# HELPERS
+# =============================================================================
+
+pkg_installed() { pacman -Qq "$1" &>/dev/null; }
+
+install_pkg() {
+  if pkg_installed "$1"; then
+    echo "  ✓ $1 already installed"
+  else
+    sudo pacman -S --needed --noconfirm "$1"
+  fi
+}
+
+install_aur() {
+  if pkg_installed "$1"; then
+    echo "  ✓ $1 already installed"
+  else
+    yay -S --needed --noconfirm "$1"
+  fi
+}
+
+enable_ext() {
+  local uuid=$1
+  if ! gnome-extensions info "$uuid" &>/dev/null; then
+    echo "  ! $uuid not found - skipping (install it first)"
+    return
+  fi
+  if gnome-extensions info "$uuid" 2>/dev/null | grep -q "State: ENABLED"; then
+    echo "  ✓ $uuid already enabled"
+  else
+    gnome-extensions enable "$uuid"
+    echo "  → enabled $uuid"
+  fi
+}
+
+# =============================================================================
+# 1. PACKAGES
+# =============================================================================
+
+echo "→ Packages..."
+
+install_pkg gnome-shell-extensions          # provides auto-move-windows, etc.
+install_aur gnome-shell-extension-caffeine
+install_aur gnome-shell-extension-battery-time
+
+# Space Bar: install from AUR (git) if not already present as a user extension
+if [[ ! -d "$HOME/.local/share/gnome-shell/extensions/space-bar@luchrioh" ]]; then
+  if yay -Qq gnome-shell-extension-space-bar-git &>/dev/null; then
+    echo "  ✓ space-bar already installed"
+  else
+    echo "  → installing space-bar from AUR..."
+    yay -S --needed --noconfirm gnome-shell-extension-space-bar-git \
+      || echo "  ! space-bar AUR install failed - install manually from https://github.com/christopher-l/space-bar/releases"
+  fi
+else
+  echo "  ✓ space-bar already installed (user extension)"
+fi
+
+# =============================================================================
+# 2. EXTENSIONS
+# =============================================================================
+
+echo "→ Extensions..."
+
+# Allow extensions that don't declare support for the running GNOME version
+gsettings set org.gnome.shell disable-extension-version-validation true
+
+enable_ext auto-move-windows@gnome-shell-extensions.gcampax.github.com
+enable_ext caffeine@patapon.info
+enable_ext battery-time@eetumos.github.com
+enable_ext space-bar@luchrioh
+
+# =============================================================================
+# 3. WORKSPACES
+# =============================================================================
+
+echo "→ Workspaces..."
+
+gsettings set org.gnome.mutter dynamic-workspaces false
+gsettings set org.gnome.desktop.wm.preferences num-workspaces "$NUM_WORKSPACES"
+gsettings set org.gnome.desktop.wm.preferences workspace-names "$WORKSPACE_NAMES"
+
+# =============================================================================
+# 4. KEYBINDINGS
+# =============================================================================
+
+echo "→ Keybindings..."
+
+# Super+1-9: switch to workspace
+for i in 1 2 3 4 5 6 7 8 9; do
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i "['<Super>$i']"
+done
+
+# Clear conflicting dock app-switcher shortcuts (Super+1-9 claimed above)
+for i in 1 2 3 4 5 6 7 8 9; do
+  gsettings set org.gnome.shell.keybindings switch-to-application-$i "@as []"
+done
+
+gsettings set org.gnome.desktop.wm.keybindings minimize "['<Super>h']"
+
+# =============================================================================
+# 5. AUTO MOVE WINDOWS
+# =============================================================================
+
+echo "→ App workspace assignments..."
+
+entries=()
+for ws_num in 1 2 3 4 5; do
+  arr="ws${ws_num}[@]"
+  for app in "${!arr}"; do
+    entries+=("'${app}:${ws_num}'")
+  done
+done
+
+list=$(IFS=,; echo "${entries[*]}")
+gsettings set org.gnome.shell.extensions.auto-move-windows application-list "[${list}]"
+
+# =============================================================================
+# 6. SPACE BAR
+# =============================================================================
+
+echo "→ Space Bar..."
+
+dconf write /org/gnome/shell/extensions/space-bar/behavior/indicator-style    "'workspaces-bar'"
+dconf write /org/gnome/shell/extensions/space-bar/behavior/position            "'left'"
+dconf write /org/gnome/shell/extensions/space-bar/behavior/position-index      1
+dconf write /org/gnome/shell/extensions/space-bar/behavior/show-empty-workspaces true
+dconf write /org/gnome/shell/extensions/space-bar/behavior/always-show-numbers  false
+dconf write /org/gnome/shell/extensions/space-bar/behavior/toggle-overview      true
+dconf write /org/gnome/shell/extensions/space-bar/behavior/scroll-wheel         "'workspaces-bar'"
+dconf write /org/gnome/shell/extensions/space-bar/appearance/workspaces-bar-padding 0
+dconf write /org/gnome/shell/extensions/space-bar/appearance/workspace-margin       0
+dconf write /org/gnome/shell/extensions/space-bar/shortcuts/enable-move-to-workspace-shortcuts true
+
+# Label styles - edit colors/padding here if you want a different look
+# active: the current workspace  |  inactive: others  |  inactive.empty: no windows
+SPACE_BAR_CSS='.space-bar { -natural-hpadding: 0px; }
+
+.space-bar-workspace-label.active {
+  margin: 0 0px; padding: 3px 8px;
+  background-color: rgba(255,255,255,0.3); color: rgba(255,255,255,1);
+  border-color: rgba(0,0,0,0); border-width: 0px; border-radius: 4px;
+  font-weight: 700;
+}
+.space-bar-workspace-label.inactive {
+  margin: 0 0px; padding: 3px 8px;
+  background-color: rgba(0,0,0,0); color: rgba(255,255,255,1);
+  border-color: rgba(0,0,0,0); border-width: 0px; border-radius: 4px;
+  font-weight: 700;
+}
+.space-bar-workspace-label.inactive.empty {
+  margin: 0 0px; padding: 3px 8px;
+  background-color: rgba(0,0,0,0); color: rgba(255,255,255,0.5);
+  border-color: rgba(0,0,0,0); border-width: 0px; border-radius: 4px;
+  font-weight: 700;
+}'
+
+dconf write /org/gnome/shell/extensions/space-bar/appearance/application-styles \
+  "$(printf "'%s'" "$SPACE_BAR_CSS")"
+
+# =============================================================================
+# 7. CAFFEINE
+# =============================================================================
+
+dconf write /org/gnome/shell/extensions/caffeine/user-enabled true
+
+# =============================================================================
+# 8. INTERFACE & APPEARANCE
+# =============================================================================
+
+echo "→ Interface..."
+
+gsettings set org.gnome.desktop.interface color-scheme             'prefer-dark'
+gsettings set org.gnome.desktop.interface accent-color             'slate'
+gsettings set org.gnome.desktop.interface clock-format             '24h'
+gsettings set org.gnome.desktop.interface clock-show-date          true
+gsettings set org.gnome.desktop.interface show-battery-percentage  true
+gsettings set org.gnome.desktop.interface enable-hot-corners       true
+gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false
+
+# =============================================================================
+# 9. INPUT & PERIPHERALS
+# =============================================================================
+
+echo "→ Input..."
+
+gsettings set org.gnome.desktop.input-sources sources          "[('xkb', 'us')]"
+gsettings set org.gnome.desktop.input-sources xkb-options      "['lv3:ralt_switch']"  # right-alt as AltGr
+gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
+
+# =============================================================================
+# 10. DOCK FAVORITES
+# =============================================================================
+
+echo "→ Dock..."
+
+favorites=$(printf "'%s'," "${DOCK_FAVORITES[@]}")
+favorites="[${favorites%,}]"
+gsettings set org.gnome.shell favorite-apps "$favorites"
+
+# =============================================================================
+# 11. WALLPAPER
+# =============================================================================
+
+echo "→ Wallpaper..."
+
+if [[ -f "$WALLPAPER" ]]; then
+  gsettings set org.gnome.desktop.background picture-uri      "file://$WALLPAPER"
+  gsettings set org.gnome.desktop.background picture-uri-dark "file://$WALLPAPER"
+  gsettings set org.gnome.desktop.background picture-options  'zoom'
+  echo "  ✓ applied"
+else
+  echo "  ! Not found: $WALLPAPER - copy the file and re-run"
+fi
+
+# =============================================================================
+
+echo ""
+echo "Done. Log out and back in to apply all changes."

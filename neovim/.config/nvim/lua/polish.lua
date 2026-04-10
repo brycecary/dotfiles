@@ -2,18 +2,21 @@
 -- things like custom filetypes. This is just pure lua so anything that doesn't
 -- fit in the normal config locations above can go here
 
--- Set up custom filetypes
--- vim.filetype.add {
---   extension = {
---     foo = "fooscript",
---   },
---   filename = {
---     ["Foofile"] = "fooscript",
---   },
---   pattern = {
---     ["~/%.config/foo/.*"] = "fooscript",
---   },
--- }
+-- custom filetypes
+vim.filetype.add {
+  extension = {
+    tf = "terraform",
+    tfvars = "terraform",
+  },
+  pattern = {
+    [".*playbook.*%.ya?ml"] = "yaml.ansible",
+    [".*roles.*/tasks/.*%.ya?ml"] = "yaml.ansible",
+    [".*roles.*/handlers/.*%.ya?ml"] = "yaml.ansible",
+    [".*inventory.*%.ya?ml"] = "yaml.ansible",
+    [".*/host_vars/.*%.ya?ml"] = "yaml.ansible",
+    [".*/group_vars/.*%.ya?ml"] = "yaml.ansible",
+  },
+}
 
 vim.api.nvim_create_augroup("neotree", {})
 vim.api.nvim_create_autocmd("UiEnter", {
@@ -26,6 +29,3 @@ vim.api.nvim_create_autocmd("UiEnter", {
     end
   end,
 })
-
-vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true })
