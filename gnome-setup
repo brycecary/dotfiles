@@ -6,6 +6,8 @@
 # Log out and back in after running to apply all changes.
 # =============================================================================
 
+DOTFILE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # =============================================================================
 # USER CONFIG
 # =============================================================================
@@ -20,7 +22,7 @@ NUM_WORKSPACES=5
 # --- Workspace 1: Browsers & Media ---
 ws1=(
   firefox.desktop
-  com.google.Chrome.desktop
+  google-chrome.desktop
   spotify.desktop
 )
 
@@ -32,6 +34,7 @@ ws2=(
 # --- Workspace 3: Terminal ---
 ws3=(
   Alacritty.desktop
+  com.mitchellh.ghostty.desktop
 )
 
 # --- Workspace 4 ---
@@ -47,16 +50,16 @@ ws5=(
 # Dock favorites
 DOCK_FAVORITES=(
   google-chrome.desktop
-  kitty.desktop
-  Alacritty.desktop
   org.gnome.Nautilus.desktop
   __MESSAGES__        # google messages
   spotify.desktop
   code-insiders.desktop
+  com.mitchellh.ghostty.desktop
 )
 
 # Wallpaper (skip if file doesn't exist)
-WALLPAPER="$HOME/.local/share/backgrounds/2026-04-01-00-22-11-nasa-2026-science-calendar-march.webp"
+WALLPAPER_SRC="$DOTFILE_DIR/desktop-backgrounds/art002e009285~large.jpg"
+WALLPAPER="$HOME/.local/share/backgrounds/$(basename "$WALLPAPER_SRC")"
 
 # =============================================================================
 # CHROME APPS
@@ -284,6 +287,11 @@ gsettings set org.gnome.shell favorite-apps "$favorites"
 # =============================================================================
 
 echo "→ Wallpaper..."
+
+if [[ -f "$WALLPAPER_SRC" ]]; then
+  mkdir -p "$(dirname "$WALLPAPER")"
+  cp "$WALLPAPER_SRC" "$WALLPAPER"
+fi
 
 if [[ -f "$WALLPAPER" ]]; then
   gsettings set org.gnome.desktop.background picture-uri      "file://$WALLPAPER"

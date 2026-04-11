@@ -61,7 +61,7 @@ if [ ! -d ./neovim ]; then
   git clone https://github.com/neovim/neovim.git
 fi
 cd neovim
-git fetch --tags
+git fetch --tags --force
 git checkout v0.11.7
 make CMAKE_BUILD_TYPE=RelWithDebInfo
 sudo make install
@@ -82,5 +82,12 @@ if [ ! -d "$LAZY_PATH" ] || [ -z "$(ls -A "$LAZY_PATH")" ]; then
   git clone --filter=blob:none --branch=stable https://github.com/folke/lazy.nvim.git "$LAZY_PATH"
 fi
 
-# Unload neovim configuration
+# Install Oh My Zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing Oh My Zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# Stow configurations
 stow -t "$HOME" neovim
+stow -t "$HOME" zsh
