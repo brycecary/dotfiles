@@ -51,7 +51,7 @@ ws5=(
 DOCK_FAVORITES=(
   google-chrome.desktop
   org.gnome.Nautilus.desktop
-  __MESSAGES__        # google messages
+  __MESSAGES__ # google messages
   spotify.desktop
   code-insiders.desktop
   com.mitchellh.ghostty.desktop
@@ -68,8 +68,8 @@ WALLPAPER="$HOME/.local/share/backgrounds/$(basename "$WALLPAPER_SRC")"
 
 find_chrome_app() {
   # Usage: find_chrome_app "App Name"
-  grep -rl "^Name=${1}$" ~/.local/share/applications/chrome-*.desktop 2>/dev/null \
-    | head -1 | xargs basename 2>/dev/null
+  grep -rl "^Name=${1}$" ~/.local/share/applications/chrome-*.desktop 2>/dev/null |
+    head -1 | xargs basename 2>/dev/null
 }
 
 MESSAGES_APP=$(find_chrome_app "Messages")
@@ -78,7 +78,7 @@ if [[ -z "$MESSAGES_APP" ]]; then
 fi
 
 # Substitute __MESSAGES__ placeholder in ws5 and dock
-for i in "${!ws5[@]}";           do [[ "${ws5[$i]}"            == "__MESSAGES__" ]] && { [[ -n "$MESSAGES_APP" ]] && ws5[$i]="$MESSAGES_APP" || unset 'ws5[$i]'; }; done
+for i in "${!ws5[@]}"; do [[ "${ws5[$i]}" == "__MESSAGES__" ]] && { [[ -n "$MESSAGES_APP" ]] && ws5[$i]="$MESSAGES_APP" || unset 'ws5[$i]'; }; done
 for i in "${!DOCK_FAVORITES[@]}"; do [[ "${DOCK_FAVORITES[$i]}" == "__MESSAGES__" ]] && { [[ -n "$MESSAGES_APP" ]] && DOCK_FAVORITES[$i]="$MESSAGES_APP" || unset 'DOCK_FAVORITES[$i]'; }; done
 
 # =============================================================================
@@ -123,7 +123,7 @@ enable_ext() {
 
 echo "→ Packages..."
 
-install_pkg gnome-shell-extensions          # provides auto-move-windows, etc.
+install_pkg gnome-shell-extensions # provides auto-move-windows, etc.
 install_aur gnome-shell-extension-caffeine
 install_aur gnome-shell-extension-battery-time
 
@@ -133,8 +133,8 @@ if [[ ! -d "$HOME/.local/share/gnome-shell/extensions/space-bar@luchrioh" ]]; th
     echo "  ✓ space-bar already installed"
   else
     echo "  → installing space-bar from AUR..."
-    yay -S --needed --noconfirm gnome-shell-extension-space-bar-git \
-      || echo "  ! space-bar AUR install failed - install manually from https://github.com/christopher-l/space-bar/releases"
+    yay -S --needed --noconfirm gnome-shell-extension-space-bar-git ||
+      echo "  ! space-bar AUR install failed - install manually from https://github.com/christopher-l/space-bar/releases"
   fi
 else
   echo "  ✓ space-bar already installed (user extension)"
@@ -196,7 +196,10 @@ for ws_num in 1 2 3 4 5; do
   done
 done
 
-list=$(IFS=,; echo "${entries[*]}")
+list=$(
+  IFS=,
+  echo "${entries[*]}"
+)
 gsettings set org.gnome.shell.extensions.auto-move-windows application-list "[${list}]"
 
 # =============================================================================
@@ -205,15 +208,15 @@ gsettings set org.gnome.shell.extensions.auto-move-windows application-list "[${
 
 echo "→ Space Bar..."
 
-dconf write /org/gnome/shell/extensions/space-bar/behavior/indicator-style    "'workspaces-bar'"
-dconf write /org/gnome/shell/extensions/space-bar/behavior/position            "'left'"
-dconf write /org/gnome/shell/extensions/space-bar/behavior/position-index      1
+dconf write /org/gnome/shell/extensions/space-bar/behavior/indicator-style "'workspaces-bar'"
+dconf write /org/gnome/shell/extensions/space-bar/behavior/position "'left'"
+dconf write /org/gnome/shell/extensions/space-bar/behavior/position-index 1
 dconf write /org/gnome/shell/extensions/space-bar/behavior/show-empty-workspaces true
-dconf write /org/gnome/shell/extensions/space-bar/behavior/always-show-numbers  false
-dconf write /org/gnome/shell/extensions/space-bar/behavior/toggle-overview      true
-dconf write /org/gnome/shell/extensions/space-bar/behavior/scroll-wheel         "'workspaces-bar'"
+dconf write /org/gnome/shell/extensions/space-bar/behavior/always-show-numbers false
+dconf write /org/gnome/shell/extensions/space-bar/behavior/toggle-overview true
+dconf write /org/gnome/shell/extensions/space-bar/behavior/scroll-wheel "'workspaces-bar'"
 dconf write /org/gnome/shell/extensions/space-bar/appearance/workspaces-bar-padding 0
-dconf write /org/gnome/shell/extensions/space-bar/appearance/workspace-margin       0
+dconf write /org/gnome/shell/extensions/space-bar/appearance/workspace-margin 0
 dconf write /org/gnome/shell/extensions/space-bar/shortcuts/enable-move-to-workspace-shortcuts true
 
 # Label styles - edit colors/padding here if you want a different look
@@ -254,13 +257,16 @@ dconf write /org/gnome/shell/extensions/caffeine/user-enabled true
 
 echo "→ Interface..."
 
-gsettings set org.gnome.desktop.interface color-scheme             'prefer-dark'
-gsettings set org.gnome.desktop.interface accent-color             'slate'
-gsettings set org.gnome.desktop.interface clock-format             '24h'
-gsettings set org.gnome.desktop.interface clock-show-date          true
-gsettings set org.gnome.desktop.interface show-battery-percentage  true
-gsettings set org.gnome.desktop.interface enable-hot-corners       true
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface accent-color 'slate'
+gsettings set org.gnome.desktop.interface clock-format '24h'
+gsettings set org.gnome.desktop.interface clock-show-date true
+gsettings set org.gnome.desktop.interface show-battery-percentage true
+gsettings set org.gnome.desktop.interface enable-hot-corners true
 gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false
+
+# Disable ambient light sensor auto-brightness
+gsettings set org.gnome.settings-daemon.plugins.power ambient-enabled false
 
 # =============================================================================
 # 9. INPUT & PERIPHERALS
@@ -268,8 +274,8 @@ gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false
 
 echo "→ Input..."
 
-gsettings set org.gnome.desktop.input-sources sources          "[('xkb', 'us')]"
-gsettings set org.gnome.desktop.input-sources xkb-options      "['lv3:ralt_switch']"  # right-alt as AltGr
+gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us')]"
+gsettings set org.gnome.desktop.input-sources xkb-options "['lv3:ralt_switch']" # right-alt as AltGr
 gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
 
 # =============================================================================
@@ -294,9 +300,9 @@ if [[ -f "$WALLPAPER_SRC" ]]; then
 fi
 
 if [[ -f "$WALLPAPER" ]]; then
-  gsettings set org.gnome.desktop.background picture-uri      "file://$WALLPAPER"
+  gsettings set org.gnome.desktop.background picture-uri "file://$WALLPAPER"
   gsettings set org.gnome.desktop.background picture-uri-dark "file://$WALLPAPER"
-  gsettings set org.gnome.desktop.background picture-options  'zoom'
+  gsettings set org.gnome.desktop.background picture-options 'zoom'
   echo "  ✓ applied"
 else
   echo "  ! Not found: $WALLPAPER - copy the file and re-run"
