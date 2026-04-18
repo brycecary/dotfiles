@@ -145,6 +145,15 @@ fi
 
 alias vi='nvim'
 
+export PATH="$HOME/.local/bin:$PATH"
+
+ci() {
+  local path=${1:-.}
+  code-insiders "$path"
+}
+
+alias danger-claude='claude --dangerously-skip-permissions'
+
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
