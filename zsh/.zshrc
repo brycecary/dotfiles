@@ -148,8 +148,8 @@ alias vi='nvim'
 export PATH="$HOME/.local/bin:$PATH"
 
 ci() {
-  local path=${1:-.}
-  code-insiders "$path"
+  local target=${1:-.}
+  code-insiders "$target"
 }
 
 alias danger-claude='claude --dangerously-skip-permissions'
