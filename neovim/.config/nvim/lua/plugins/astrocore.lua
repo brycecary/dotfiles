@@ -81,6 +81,9 @@ return {
         -- Quick save
         ["<C-s>"] = { "<cmd>w<cr>", desc = "Save file" },
 
+        -- Toggle word wrap (matches VS Code Alt+Z)
+        ["<A-z>"] = { "<cmd>set wrap!<cr>", desc = "Toggle word wrap" },
+
         -- Window navigation via smart-splits
         ["<C-h>"] = { function() require("smart-splits").move_cursor_left() end, desc = "Move to left split" },
         ["<C-j>"] = { function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" },
@@ -128,6 +131,7 @@ return {
       },
       i = {
         ["<C-s>"] = { "<esc><cmd>w<cr>", desc = "Save file" },
+        ["<A-z>"] = { "<cmd>set wrap!<cr>", desc = "Toggle word wrap" },
       },
       v = {
         -- Move lines up/down
