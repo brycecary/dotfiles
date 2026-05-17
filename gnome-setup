@@ -127,6 +127,18 @@ install_pkg gnome-shell-extensions # provides auto-move-windows, etc.
 install_aur gnome-shell-extension-caffeine
 install_aur gnome-shell-extension-battery-time
 
+# Smart Auto Move
+if [[ ! -d "$HOME/.local/share/gnome-shell/extensions/smart-auto-move@khimaros.com" ]]; then
+  echo "  → installing smart-auto-move from source..."
+  tmp=$(mktemp -d)
+  git clone --depth=1 https://github.com/khimaros/smart-auto-move "$tmp" &&
+    make -C "$tmp" install ||
+    echo "  ! smart-auto-move install failed"
+  rm -rf "$tmp"
+else
+  echo "  ✓ smart-auto-move already installed"
+fi
+
 # Space Bar: install from AUR (git) if not already present as a user extension
 if [[ ! -d "$HOME/.local/share/gnome-shell/extensions/space-bar@luchrioh" ]]; then
   if yay -Qq gnome-shell-extension-space-bar-git &>/dev/null; then
@@ -153,6 +165,7 @@ enable_ext auto-move-windows@gnome-shell-extensions.gcampax.github.com
 enable_ext caffeine@patapon.info
 enable_ext battery-time@eetumos.github.com
 enable_ext space-bar@luchrioh
+enable_ext smart-auto-move@khimaros.com
 
 # =============================================================================
 # 3. WORKSPACES

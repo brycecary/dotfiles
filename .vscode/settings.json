@@ -1,0 +1,5 @@
+{
+  "shellcheck.ignorePatterns": {
+    "**/*.zshrc": false,
+  },
+}
