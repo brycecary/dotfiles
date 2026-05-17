@@ -187,6 +187,12 @@ alias nt='new-tree'
 alias rt='rm-tree'
 alias lt='ls-tree'
 
+alias start-docker='sudo systemctl start docker'
+alias stop-docker='sudo systemctl stop docker'
+alias restart-docker='sudo systemctl restart docker'
+
+alias docker-nuke='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
+
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
