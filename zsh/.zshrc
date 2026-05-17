@@ -9,6 +9,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
+# shellcheck disable=SC2034
 ZSH_THEME="amuse"
 
 # Set list of themes to pick from when loading at random
@@ -42,12 +43,14 @@ zstyle ':omz:update' mode reminder # just remind me to update when it's time
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
+# shellcheck disable=SC2034
 ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# shellcheck disable=SC2034
 COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -61,6 +64,7 @@ COMPLETION_WAITING_DOTS="true"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
+# shellcheck disable=SC2034
 HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
@@ -71,6 +75,7 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+# shellcheck disable=SC2034
 plugins=(
   1password
   aliases
@@ -152,7 +157,35 @@ ci() {
   code-insiders "$target"
 }
 
-alias danger-claude='claude --dangerously-skip-permissions'
+alias claude='IS_SANDBOX=1 claude --allow-dangerously-skip-permissions'
+
+# Code dir
+# CODE_DIR="$HOME/code"
+CODE_DIR="/code"
+
+# Git work trees
+new-tree() {
+  local folderName=$1
+  local commitFrom=$2
+
+  git worktree add --guess-remote "$CODE_DIR/$folderName" "$commitFrom"
+
+  ci "$CODE_DIR/$folderName"
+}
+
+rm-tree() {
+  local folderName=$1
+
+  git worktree remove "$CODE_DIR/$folderName" "${@:2}"
+}
+
+ls-tree() {
+  git worktree list
+}
+
+alias nt='new-tree'
+alias rt='rm-tree'
+alias lt='ls-tree'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
